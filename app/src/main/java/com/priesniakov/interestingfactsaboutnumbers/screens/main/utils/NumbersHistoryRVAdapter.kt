@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.priesniakov.interestingfactsaboutnumbers.data.entity.NumberFactResponse
 import com.priesniakov.interestingfactsaboutnumbers.databinding.ItemNumbersHistoryBinding
 
-class NumbersHistoryRVAdapter : RecyclerView.Adapter<NumbersHistoryViewHolder>() {
+class NumbersHistoryRVAdapter(private val onClickAction: (item: NumberFactResponse) -> Unit) :
+    RecyclerView.Adapter<NumbersHistoryViewHolder>() {
 
     private val itemList = mutableListOf<NumberFactResponse>()
 
@@ -19,7 +20,7 @@ class NumbersHistoryRVAdapter : RecyclerView.Adapter<NumbersHistoryViewHolder>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NumbersHistoryViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemNumbersHistoryBinding.inflate(inflater, parent, false)
-        return NumbersHistoryViewHolder(binding)
+        return NumbersHistoryViewHolder(binding, onClickAction)
     }
 
     override fun onBindViewHolder(holder: NumbersHistoryViewHolder, position: Int) {

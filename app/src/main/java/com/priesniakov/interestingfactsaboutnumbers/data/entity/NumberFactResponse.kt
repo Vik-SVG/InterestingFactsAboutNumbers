@@ -8,7 +8,7 @@ import com.priesniakov.interestingfactsaboutnumbers.data.database.NUMBER_FACTS_T
 data class NumberFactResponse(
     val found: Boolean,
     @PrimaryKey(autoGenerate = false)
-    val number: Int,
+    val number: Double,
     val text: String,
     val type: String
 )

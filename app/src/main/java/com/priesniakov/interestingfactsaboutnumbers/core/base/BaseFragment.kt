@@ -70,6 +70,8 @@ abstract class BaseFragment<T : ViewBinding>(
         }
     }
 
+    protected fun getCurrentDestination() = navController.currentDestination?.id
+
     protected fun <D : Any, R : Resource<D>> collectResult(
         flow: StateFlow<R>,
         successAction: (ResourceSuccess<D>) -> Unit,
@@ -77,12 +79,17 @@ abstract class BaseFragment<T : ViewBinding>(
     ) {
         lifecycleScope.launch {
             flow.collectLatest {
-                showModalProgress = false
                 when (it) {
-                    ResourceIdle -> {}
+                    ResourceIdle -> showModalProgress = false
                     ResourceLoading -> showModalProgress = true
-                    is ResourceError<*> -> errorAction(it as ResourceError<D>)
-                    is ResourceSuccess<*> -> successAction(it as ResourceSuccess<D>)
+                    is ResourceError<*> -> {
+                        showModalProgress = false
+                        errorAction(it as ResourceError<D>)
+                    }
+                    is ResourceSuccess<*> -> {
+                        showModalProgress = false
+                        successAction(it as ResourceSuccess<D>)
+                    }
                 }
             }
         }

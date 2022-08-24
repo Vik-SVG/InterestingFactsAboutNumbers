@@ -2,8 +2,6 @@ package com.priesniakov.interestingfactsaboutnumbers.screens.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.priesniakov.interestingfactsaboutnumbers.core.data.Resource
-import com.priesniakov.interestingfactsaboutnumbers.core.data.ResourceError
 import com.priesniakov.interestingfactsaboutnumbers.core.data.ResourceIdle
 import com.priesniakov.interestingfactsaboutnumbers.data.common.NumberFact
 import com.priesniakov.interestingfactsaboutnumbers.data.entity.NumberFactResponse
@@ -20,6 +18,8 @@ abstract class MainViewModel : ViewModel() {
     abstract fun getNumberFact(number: String)
     abstract val numberFlow: StateFlow<NumberFact>
     abstract fun getHistory()
+    abstract fun clearData()
+
     abstract val numbersHistoryFlow: StateFlow<List<NumberFactResponse>>
 }
 
@@ -44,6 +44,10 @@ class MainViewModelImpl(
         viewModelScope.launch(Dispatchers.IO) {
             historyUseCase().collectLatest { _numbersHistoryFlow.emit(it) }
         }
+    }
+
+    override fun clearData() {
+        _numberFlow.value = ResourceIdle
     }
 
     override fun getNumberFact(number: String) {
