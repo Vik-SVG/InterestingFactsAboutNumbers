@@ -6,12 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
+import com.google.android.material.snackbar.Snackbar
+import com.priesniakov.interestingfactsaboutnumbers.core.data.*
 import com.priesniakov.interestingfactsaboutnumbers.screens.common.ProgressDialog
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 typealias Inflate<T> = (LayoutInflater, ViewGroup?, Boolean) -> T
@@ -62,6 +68,29 @@ abstract class BaseFragment<T : ViewBinding>(
         if (currentDestination == this.javaClass.name) {
             navController.navigate(directions)
         }
+    }
+
+    protected fun <D : Any, R : Resource<D>> collectResult(
+        flow: StateFlow<R>,
+        successAction: (ResourceSuccess<D>) -> Unit,
+        errorAction: (ResourceError<D>) -> Unit = { showError(it.message) }
+    ) {
+        lifecycleScope.launch {
+            flow.collectLatest {
+                showModalProgress = false
+                when (it) {
+                    ResourceIdle -> {}
+                    ResourceLoading -> showModalProgress = true
+                    is ResourceError<*> -> errorAction(it as ResourceError<D>)
+                    is ResourceSuccess<*> -> successAction(it as ResourceSuccess<D>)
+                }
+            }
+        }
+    }
+
+    protected fun showError(message: String) {
+        val snackBar = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
+        snackBar.show()
     }
 
     override fun onDestroyView() {

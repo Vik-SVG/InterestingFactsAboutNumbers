@@ -16,7 +16,7 @@ interface NumbersFactsDao {
     suspend fun insertNumberFact(vararg exceptionLog: NumberFactResponse)
 
     @Query("SELECT * FROM $NUMBER_FACTS_TABLE_NAME")
-    suspend fun getAllFacts(): List<NumberFactResponse>
+    fun getAllFacts(): Flow<List<NumberFactResponse>>
 
     @Query("DELETE FROM $NUMBER_FACTS_TABLE_NAME")
     suspend fun deleteAllFacts()

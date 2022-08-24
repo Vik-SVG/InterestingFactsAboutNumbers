@@ -1,7 +1,6 @@
 package com.priesniakov.interestingfactsaboutnumbers.data.repositories
 
 import com.priesniakov.interestingfactsaboutnumbers.core.base.BaseRepository
-import com.priesniakov.interestingfactsaboutnumbers.core.data.Resource
 import com.priesniakov.interestingfactsaboutnumbers.data.common.NumberFact
 import com.priesniakov.interestingfactsaboutnumbers.data.database.NumbersFactsDao
 import com.priesniakov.interestingfactsaboutnumbers.data.datasources.NumberFactsDatasource
@@ -13,6 +12,7 @@ interface NumberFactsRepository {
     fun getRandomNumberFact(): Flow<NumberFact>
     fun getExactNumberFact(number: Int): Flow<NumberFact>
     fun getCashedNumber(number: Int): Flow<NumberFact>
+    fun getNumbersHistory(): Flow<List<NumberFactResponse>>
 }
 
 class NumberFactsRepositoryImpl(
@@ -32,6 +32,9 @@ class NumberFactsRepositoryImpl(
             saveData = { dao.insertNumberFact(it) }
         )
 
-    override fun getCashedNumber(number: Int)  = getCashedData { dao.getFactByNumber(number) }
+    override fun getCashedNumber(number: Int) = getCashedData { dao.getFactByNumber(number) }
+
+    override fun getNumbersHistory(): Flow<List<NumberFactResponse>> = dao.getAllFacts()
+
 
 }

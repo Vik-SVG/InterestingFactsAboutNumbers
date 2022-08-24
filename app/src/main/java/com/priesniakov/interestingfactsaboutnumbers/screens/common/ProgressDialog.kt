@@ -25,7 +25,7 @@ internal class ProgressDialog : DialogFragment() {
         return super.onCreateDialog(savedInstanceState).also {
             setStyle(STYLE_NO_TITLE, R.style.NumbersFacts_ProgressDialog)
             it.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            it.window?.setDimAmount(0f)
+            it.window?.setDimAmount(0.3f)
         }
     }
 

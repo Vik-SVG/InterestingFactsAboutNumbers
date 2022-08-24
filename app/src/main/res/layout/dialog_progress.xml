@@ -8,8 +8,8 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="@dimen/progress_dialog_size"
+        android:layout_height="@dimen/progress_dialog_size"
         android:indeterminate="true"
         android:indeterminateTint="?attr/colorPrimary" />
 
